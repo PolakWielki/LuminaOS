@@ -8,7 +8,6 @@
 use core::panic::PanicInfo;
 use volatile::Volatile;
 use spin::Mutex;
-use x86_64::structures::tss::TaskStateSegment;
 use x86_64::instructions::interrupts;
 
 /// VGA text mode buffer address
