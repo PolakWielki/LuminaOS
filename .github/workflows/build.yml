@@ -27,12 +27,13 @@ jobs:
 
     - name: Build bootimage
       run: cargo bootimage
+      working-directory: rust-os
 
     - name: Prepare ISO directory
       run: mkdir iso
 
     - name: Copy bootimage
-      run: cp target/x86_64-unknown-none/debug/bootimage-*.bin iso/lumina.bin
+      run: cp rust-os/target/x86_64-unknown-none/debug/bootimage-*.bin iso/lumina.bin
 
     - name: Create ISO
       run: |
