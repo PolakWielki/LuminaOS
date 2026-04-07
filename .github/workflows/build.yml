@@ -28,7 +28,7 @@ jobs:
     - name: Build bootimage
       run: cargo bootimage
 
-    - name: Create ISO directory
+    - name: Prepare ISO directory
       run: mkdir iso
 
     - name: Copy bootimage
