@@ -1,0 +1,51 @@
+name: Build LuminaOS ISO
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Rust nightly
+      uses: dtolnay/rust-toolchain@nightly
+
+    - name: Add target
+      run: rustup target add x86_64-unknown-none
+
+    - name: Install bootimage
+      run: cargo install bootimage
+
+    - name: Install xorriso
+      run: sudo apt-get update && sudo apt-get install -y xorriso
+
+    - name: Build bootimage
+      run: cargo bootimage
+
+    - name: Create ISO directory
+      run: mkdir iso
+
+    - name: Copy bootimage
+      run: cp target/x86_64-unknown-none/debug/bootimage-*.bin iso/lumina.bin
+
+    - name: Create ISO
+      run: |
+        xorriso -as mkisofs \
+          -b lumina.bin \
+          -no-emul-boot \
+          -boot-load-size 4 \
+          -boot-info-table \
+          -o LuminaOS.iso \
+          iso/
+
+    - name: Upload ISO artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: LuminaOS-ISO
+        path: LuminaOS.iso
